@@ -35,7 +35,7 @@ class dataFromWebPage
 	public: 
 	dataFromWebPage(string inputted);
 	string returnOutMessage();
-	
+	 
 	private:
 	
 	string returnUsername();
