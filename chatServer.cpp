@@ -1,13 +1,13 @@
 /***************************************************************************
-* nameservercpp  -  Program to serve of last name statistics
+* chatServer.cpp
  *
-* copyright : (C) 2009 by Jim Skon
+* 
 *
-* This program runs as a background server to a CGI program, providinging US Census
-* Data on the frequency of names in response to requestes.  The rational for this 
-* is to demonstrait how a background process can serve up information to a web program,
-* saving the web program from the work of intiallizing large data structures for every
-* call.
+* This program runs as a background server to a CGI program, providinging a chat
+* room where multiple users can send messages to one another.
+* 
+* 
+* 
 * 
 * 
 *
@@ -27,8 +27,8 @@
 using namespace std;
 
 /* Fifo names */
-string receive_fifo = "Namerequest";
-string send_fifo = "Namereply";
+string receive_fifo = "Chatrequest";
+string send_fifo = "Chatreply";
 
 class dataFromWebPage
 {
