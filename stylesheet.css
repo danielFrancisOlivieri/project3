@@ -1,0 +1,22 @@
+
+div 
+{
+    width: 400px;
+    margin: auto;
+    
+    
+}
+
+    #chatbox
+{
+  padding: 10px;
+  background: #fff; 
+  height: 260px;
+  width: 430px; 
+  border: 1px solid #ACD8F0;
+  overflow:auto;
+  margin: 0 auto;
+  
+  
+}
+ 
