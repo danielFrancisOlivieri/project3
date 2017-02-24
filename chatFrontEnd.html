@@ -46,6 +46,21 @@ function getresponse () {
 
      var message = document.getElementById('usermsg').value;
 
+var colorChosen = $("input[name='color']:checked").val();
+
+if (colorChosen === "0")
+{
+  console.log("black");
+}
+if (colorChosen === "1")
+{
+  console.log("blue");
+}
+if (colorChosen === "2")
+{
+  console.log("purple");
+}
+
 if (message.length > 1)
 {
 console.log("message is: " + message);
@@ -147,9 +162,9 @@ div
 
 
 <form action="">
-  <input type="radio" name="color" value="Black"> Black<br>
-  <input type="radio" name="color" value="Blue"> Blue<br>
-  <input type="radio" name="color" value="Purple"> Purple
+  <input type="radio" name="color" value="0"> Black<br>
+  <input type="radio" name="color" value="1"> Blue<br>
+  <input type="radio" name="color" value="2"> Purple
 </form>
 
 </center>
