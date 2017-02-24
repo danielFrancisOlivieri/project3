@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<TITLE>Shakespeare Program</TITLE>
+<META AUTHOR="Daniel Olivieri">
+</HEAD>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <!-- $Id: name_stats_ajax.html,v 1.6 skon Exp $ -->
+<link rel="stylesheet" type="text/css" href="name_stats_ajax.css">
+  <title>GNU cgicc Name Data Form</title>
+</head>
+
+<script type = "text/javascript">
+var XMLHttp;
+if(navigator.appName == "Microsoft Internet Explorer") {
+    XMLHttp = new ActiveXObject("Microsoft.XMLHTTP");
+} else {
+    XMLHttp = new XMLHttpRequest();
+}
+			
+// return the value of the radio button that is checked
+// return an empty string if none are checked, or
+// there are no radio buttons
+function getCheckedValue(radioObj) {
+  if(!radioObj)
+     return "";
+  var radioLength = radioObj.length;
+  if(radioLength == undefined)
+     if(radioObj.checked)
+        return radioObj.value;
+     else
+        return "";
+  for(var i = 0; i < radioLength; i++) {
+     if(radioObj[i].checked) {
+        return radioObj[i].value;
+     }
+   }
+    return "";
+}
+function getresponse () {
+
+   //  var ts = getCheckedValue(document.radioResultsSelect.type_select);
+
+     var message = document.getElementById('inputField').value;		     
+    // if (name.length < 1) return;
+
+    XMLHttp.open("GET", "/cgi-bin/olivierid_JAD_chatAjax.cgi?"
+						 + "message=" + message
+						 ,true);
+						 console.log("working 1");
+    XMLHttp.onreadystatechange=function() {
+	console.log("working 2");
+    var fromCGI = XMLHttp.responseText;
+    document.getElementById('response_area').innerHTML = fromCGI;
+	console.log("this is table: " + fromCGI); 
+	}
+	XMLHttp.send(null);
+}
+
+</script>
+
+<style>
+
+#response_div 
+{
+border-color: black;
+border: dashed;
+}
+
+</style>
+
+<BODY>
+<H1>Shakespeare Program</H1>
+<P>
+
+<P>  The reason for such a architecture is to allow a simple program, with a MAP preloaded with data,
+to quickly provide results without incurring the overhead of a reloading the census data for each request. 
+<br> (Written by D)
+
+
+<HR>
+Last name to look up data for: 
+<!--
+<INPUT NAME="name" TYPE="text" id=name MAXLENGTH=30></TD>
+-->
+<p>
+<input type="button" onclick="javascript: getresponse ()" name="submit" value="Submit" />
+</p>
+
+
+<textarea id = "inputField" rows="4" cols="50" value = "Gatsby believied in the green light">
+
+</textarea>
+<div id = "response_div" >
+<p id = "response_area"></p>
+</div>
+</BODY>
+</HTML>
+
+
+
+
+
