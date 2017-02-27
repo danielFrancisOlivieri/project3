@@ -16,7 +16,7 @@ function getProcList () {
     if (uname.length < 1) return;
 
     XMLHttp.open("GET", "/usr/lib/cgi-bin/$(USER)_JAD_chatAjax.cgi?"
-		 + "uname=" + uname
+		 + "message=" + message
 		 ,true);
     XMLHttp.onreadystatechange=function() {
 
