@@ -23,6 +23,7 @@
 #include <map>
 #include <algorithm>
 #include <string>
+#include <vector>
 #include "fifo.h"
 
 using namespace std;
@@ -33,13 +34,14 @@ class dataFromWebPage
 	public: 
 	dataFromWebPage(string inputted);
 	string returnOutMessage();
+	string returnText();
 	
 	private:
 	
 	string returnUsername();
 	string returnColor();
 	string returnPicture();
-	string returnText();
+	// string returnText();
 	string censorText();
 		string originalInput, outPut, username, color, picture, text;
 	friend void find_and_replace(string& source, string const& find, string const& replace);
@@ -249,7 +251,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
   {
 	  //string censoredText = censorText();
 	  //censorText();
-	 return "$USERNAME*Cato$COLOR*red$PICTURE*three$TEXT*" + text + "$END";
+	 return "$USERNAME*Cato$COLOR*red$PICTURE*three$TEXT*" + text + "proof" + "$END";
   }
   
   
@@ -262,11 +264,16 @@ string send_fifo = "Namereply";
 int main() {
 
 string inMessage, outMessage;
+
+vector <string> commentVector;
+
+
   // create the FIFOs for communication
   Fifo recfifo(receive_fifo);
   Fifo sendfifo(send_fifo);
   
   
+  string allCommentsInOneString = "| ";
   
   // main while loop 
    while (1) {
@@ -278,15 +285,39 @@ string inMessage, outMessage;
 	
 	//StemEnglish(inMessage);// stems it 
 		cout << "inmessage: " << inMessage << endl;
-
+	dataFromWebPage ourMessage(inMessage);
+	
 	//vec = indexSearch(inMessage); // gets the cector of lines 
 	
-	outMessage = inMessage;
+	outMessage = ourMessage.returnText();
+	commentVector.push_back(inMessage);
+	//cout << "Vector: " << commentVector.begin() << endl;
+	allCommentsInOneString += inMessage;
 	
 	sendfifo.openwrite(); // writes 
+	cout << "allcomments: " << ourMessage.returnText() << endl; //allCommentsInOneString << endl;
+	sendfifo.send(ourMessage.returnText() + "$END");  //(allCommentsInOneString + "meep");
+	
+	/*
+	if (commentVector.size() > 1)
+	{
+		for (int i = 0; i < commentVector.size(); i++)
+	{
+		cout << "this is the vec||||--> " << commentVector[i] << endl;
+		sendfifo.send(commentVector[i-1] + "meep");
+		cout << "vector size: " << commentVector.size() << endl;
+	}
+	}
+	else{
+		sendfifo.send(commentVector.front() + "meep");
+	}
+	
+	*/
+	
+	
 	//sendfifo.send("</p>");
 
-	sendfifo.send(outMessage + "meep");
+	//sendfifo.send(outMessage + "meep");
 
 	
 	

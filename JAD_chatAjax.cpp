@@ -18,11 +18,6 @@
 using namespace std;
 using namespace cgicc; // Needed for AJAX functions.
 
-// Possible values returned by results_select
-#define LAST  "Last"
-#define MALE "Male"
-#define FEMALE "Female"
-
 //Indeed, myString needs to be a copy of the original string
 std::string StringToUpper(std::string myString)
 {
@@ -58,8 +53,10 @@ int main() {
  // cout << "This is the message: " << inMessage << endl;
   inMessage = StringToUpper(inMessage);
   
-cout << "resolve itself into dew: " << inMessage << "</p>" << endl;
-return 0;
+  string color = "red";
+  
+cout << "<p> <font color = " + color + ">" << inMessage << " </font> </p>" << endl;
+//return 0;
 
   while(1)
 	
@@ -69,13 +66,13 @@ return 0;
  sendfifo.openwrite();
   sendfifo.send(inMessage);
   
-  return 0;
+
  // return 0;
   /* Get a message from a server */
   recfifo.openread();
 	//return 0;	
 	outMessage = recfifo.recv(); // puts the results from the server into the results variable 
-	 
+	  outMessage = StringToUpper(outMessage);
 	 // this if statement looks for the $END in order to break the loop once all the lines have been outputted 
 	 if (outMessage.find("$END") != string:: npos)
 	 {

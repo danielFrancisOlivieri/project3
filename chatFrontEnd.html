@@ -14,6 +14,44 @@
 </head>
 
 <script>
+
+	
+     var XMLHttp;
+     function getUsername()
+     {
+     
+     var name= document.getElementById('userName').value;
+     document.getElementById('user').innerHTML = name;
+     
+      }
+      
+      /*function exitChat()
+      {
+      clearInterval(intVar)
+      }
+      */
+
+
+
+
+// comment object 
+var commentObject = {
+username : "Hamlet",
+text: "",
+color: "black",
+returnOutputString: function() {
+ return "$USERNAME*" + this.username + "Cato$COLOR*" + this.color + "$PICTURE*three$TEXT*" + this.text + "$END";
+}
+
+}
+/*
+$(document).ready(function(){
+    $("#submitName").click(function(){
+       commentObject.username = $("#userName:text").val();
+	   console.log(commentObject.userName);
+    });
+});
+*/
 var XMLHttp, avoidReplication = "";
 if(navigator.appName == "Microsoft Internet Explorer") {
     XMLHttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -65,6 +103,9 @@ if (message.length > 1)
 {
 console.log("message is: " + message);
   // if (name.length < 1) return;
+  
+  commentObject.text = message;
+  message = commentObject.returnOutputString();
 
     XMLHttp.open("GET", "/cgi-bin/olivierid_JAD_chatAjax.cgi?"
 						 + "message=" + message
@@ -144,17 +185,12 @@ div
 
 
 
-
-
-
-
 <!-- text boc to input username -->
-<h2>Username </h2>
-
 <div id= "UserName" ></div>
-<form name="userName" action="">
+<form name="userName" action=""> 
    <input name= "userName" type="text" id="userName" size="10" />
-   <input name= "submitName" type="submit" id= "submitName" value= Send />
+   <input name= "submitName" type="button" onclick= "javascript: getUsername()" 
+   id= "submitName" value= Send /> 
 
 <h2>Color </h2>
 
@@ -175,7 +211,7 @@ div
 
 <div id= "wrapper" >
    <div id= "menu">
-   <p class= "welcome"> Welcome, <b></b></p>
+   <p class= "welcome"> Welcome, <b> <span id="user" ></span></b></p>
    <p class= "logout"><a id= "exit" href= "#">Exit Chat</a></p>
    <div style= "clear:both" ></div>
 

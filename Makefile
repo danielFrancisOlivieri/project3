@@ -44,7 +44,7 @@ PutCGI: JAD_chatAjax
 	ls -l /usr/lib/cgi-bin/
 
 PutHTML:
-	cp site.html /var/www/html/class/softdev/$(USER)/project3
+	cp chatFrontEnd.html /var/www/html/class/softdev/$(USER)/project3
 	cp name_stats_ajax.css /var/www/html/class/softdev/$(USER)/project3
 
 	echo "Current contents of your HTML directory: "
