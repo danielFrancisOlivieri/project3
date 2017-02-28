@@ -23,6 +23,8 @@
 #include <map>
 #include <algorithm>
 #include <string>
+#include <vector>
+#include <ostream>
 #include "fifo.h"
 
 using namespace std;
@@ -33,13 +35,14 @@ class dataFromWebPage
 	public: 
 	dataFromWebPage(string inputted);
 	string returnOutMessage();
+	string returnText();
 	
 	private:
 	
 	string returnUsername();
 	string returnColor();
 	string returnPicture();
-	string returnText();
+	// string returnText();
 	string censorText();
 		string originalInput, outPut, username, color, picture, text;
 	friend void find_and_replace(string& source, string const& find, string const& replace);
@@ -91,7 +94,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$USERNAME*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 1" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -123,7 +126,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$COLOR*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 2" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -169,7 +172,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$PICTURE*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 3" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -215,7 +218,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$TEXT*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 4" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -249,7 +252,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
   {
 	  //string censoredText = censorText();
 	  //censorText();
-	 return "$USERNAME*Cato$COLOR*red$PICTURE*three$TEXT*" + text + "$END";
+	 return "$USERNAME*Cato$COLOR*red$PICTURE*three$TEXT*" + text + "proof" + "$END";
   }
   
   
@@ -257,11 +260,22 @@ void find_and_replace(string& source, string const& find, string const& replace)
   /* Fifo names */
 string receive_fifo = "Namerequest";
 string send_fifo = "Namereply";
-
+int count = 0;
 /* Server main line,create name MAP, wait for and serve requests */
 int main() {
 
 string inMessage, outMessage;
+
+vector <string> commentVector;
+vector <string> testVector;
+
+testVector.push_back("Gastby");
+testVector.push_back("believed in the green");
+testVector.push_back("light the future that year by ");
+testVector.push_back("year receds before us");
+testVector.push_back("it eludes us then but it is no matter");
+testVector.push_back("tomorrow we'll run faster, stretch out our arms farther.");
+
   // create the FIFOs for communication
   Fifo recfifo(receive_fifo);
   Fifo sendfifo(send_fifo);
@@ -273,102 +287,59 @@ string inMessage, outMessage;
 
 	    recfifo.openread();// opens to read
 	     inMessage = recfifo.recv(); // takes message in 
+		 	sendfifo.openwrite(); // writes 
+			
+		if (inMessage.find("***$request") == -1)
+		{
+			 cout << "inmessage: " << inMessage << endl;
+			 
+		 int forSubstring = inMessage.size() - 4;
 		 
-	transform(inMessage.begin(), inMessage.end(), inMessage.begin(),(int (*)(int))tolower); // makes the word lower case
-	
-	//StemEnglish(inMessage);// stems it 
-		cout << "inmessage: " << inMessage << endl;
-
-	//vec = indexSearch(inMessage); // gets the cector of lines 
-	
-	outMessage = inMessage;
-	
-	sendfifo.openwrite(); // writes 
-	//sendfifo.send("</p>");
-
-	sendfifo.send(outMessage + "meep");
-
+		 inMessage = inMessage.substr(0, forSubstring);
+		 
+	 // inMessage.erase(commentVector.size() - 4, 4);
+		commentVector.push_back(inMessage);
+	cout << "smeep: " << commentVector.back() << endl;
 	
 	
-	//is.close();
-
-	//sendfifo.send("$END");
-
+	
+	cout << "allcomments: " << inMessage << endl; //allCommentsInOneString << endl;
+	inMessage = "";
+	 cout << "size: " << commentVector.size() << endl;
+	 
+		}
+	    
+	 
+	 else {
+		 
+	for (int i = 0; i < commentVector.size(); i++)
+	{
+		 sendfifo.send(commentVector[i]);
+		 cout << "IT has be sent: " << i<< endl;
+	}
+	 
+	 sendfifo.send("$END");
+	
+	 }
+	 
+		// cout << allCommentsInOneString << endl;
+		//  	 allCommentsInOneString += "<p>" + inMessage + "</p>";
+	 
+	 // sendfifo.send(commentVector.front());
+	 // if (inMessage.find("***$request") != -1){
+		 // sendfifo.send(commentVector.back());
+	 // }
+		// for (int i = 0; i < commentVector.size(); i++)
+		// {
+			// sendfifo.send(commentVector[i]);  //(commentVector.back());
+		// }
+		
+	 
+	  
 
 	sendfifo.fifoclose();
 	 recfifo.fifoclose();
   }
   
   
-  /*
-while (1) {
-  recfifo.openread();
-    inMessage = recfifo.recv();
-	
-	dataFromWebPage dataToSend(inMessage);
-	
-		cout << " Results: " << dataToSend.returnOutMessage() << endl;
-
-	sendfifo.openwrite();
-	sendfifo.send(dataToSend.returnOutMessage() + "goofy");
-	sendfifo.fifoclose();
-	recfifo.fifoclose();
 }
-
-/*
-string inMessage, reply; // variable to hold the reply gotten from the webpage 
-
-  // create the FIFOs for communication
-  Fifo recfifo(receive_fifo);
-  Fifo sendfifo(send_fifo);
-
-  recfifo.openread();
-  
-while (reply.find("$END") != -1)
-{
-  
-  
-//  dataFromWebPage ourData(inputtedString); // put string into class 
-  
-  //cout << ourData.returnOutMessage() << endl;
-  cout << "Looping" << endl;
-  
-	reply = recfifo.recv();
-	
-	cout << reply << endl;
-	
-	
-}
-
-recfifo.fifoclose();
-  sendfifo.openwrite();
-	sendfifo.send(reply);
-	sendfifo.fifoclose();
-	*/
-	//recfifo.fifoclose();
-	
-  
-  // send the string out to CGI 
-  
-  //cout<< dataFromWebPage.originalInput << endl;
-  /*
-  To do
-  
-  1. open fifos
-  2. read data from cgi
-  3. open the object (possibly JSON)
-  4. censor
-  5. change object to censored form
-  6. send to CGI through fifo 
-  7. repeat  
-  
-  */
-  
-
-  
-}
-
-
- 
- 
- 
