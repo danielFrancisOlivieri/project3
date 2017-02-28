@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css" href="name_stats_ajax.css">
 <script>
 
-     var XMLHttp;
+     var XMLHttp, busy = false;
 
 
 	 function init() {
@@ -92,10 +92,13 @@ if(navigator.appName == "Microsoft Internet Explorer") {
 
 function sendComment () {
 
-   //  var ts = getCheckedValue(document.radioResultsSelect.type_select);
-
-     var message = document.getElementById('usermsg').value;
-
+if (busy == true)
+{
+}
+else
+{
+ var message = document.getElementById('usermsg').value;
+busy = true;
 
 if (message.length > 1)
 {
@@ -126,7 +129,11 @@ console.log("inMessage is: " + message);
 		       }
 			   */
 	XMLHttp.send(null);
+busy = false;
+}
+  
 
+    
 		       }
 
 		       }
