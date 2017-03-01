@@ -1,8 +1,8 @@
 
 <HTML>
 <HEAD>
-<TITLE>Shakespeare Program</TITLE>
-<META AUTHOR="Daniel Olivieri">
+<TITLE>SoftDilemma Chatroom</TITLE>
+<META AUTHOR="Juvi, Aidan, and Daniel ">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
@@ -10,31 +10,94 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <!-- $Id: name_stats_ajax.html,v 1.6 skon Exp $ -->
 <link rel="stylesheet" type="text/css" href="name_stats_ajax.css">
-
-</head>
-
 <script>
 
+     var XMLHttp, busy = false, getProcListBusy = false, vectorCount;
+var previouslySentComments = ["$END"];
+
+	 function init() {
+    if(navigator.appName == "Microsoft Internet Explorer") {
+	XMLHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } else {
+	XMLHttp = new XMLHttpRequest();
+    }
+}
+
+function getProcList () {
+ if (!getProcListBusy)
+ {
+ getProcListBusy = true;
+ var commentClass = "comment";
+   var outMessage = "***$request$END"; //= document.getElementById('outMessage').value;
+//console.log("getProcList");
+    if (outMessage.length < 0) return;
+    XMLHttp.open("GET", "/cgi-bin/olivierid_JAD_chatAjax.cgi?"
+		 + "outMessage=" + outMessage
+		 ,true);
+    XMLHttp.onreadystatechange=function() {
+	if (XMLHttp.readyState == 4) {
+	    //document.getElementById('response_area').innerHTML = XMLHttp.responseText;
+
+		       var fromCGI = XMLHttp.responseText;
+			   console.log("From CGI: " + fromCGI); 
+	var isNew = true;
+	//var avoidReplication = "";
+   // document.getElementById('response_area').innerHTML = fromCGI;
+for (i = 0; i < previouslySentComments.length; i++)
+{
+//console.log(fromCGI + "?=" + previouslySentComments[i]);
+
+if (previouslySentComments[i].includes(fromCGI))
+{
+//console.log(fromCGI +" cancelled");
+isNew = false;
+break;
+}
+}
+	//console.log ("Ready to display:"+fromCGI);
+	if (isNew){
+	fromCGI = fromCGI.replace("$END", "");
+	fromCGI = fromCGI.replace("Daniel", "my hero Daniel");
+	fromCGI = fromCGI.replace("fuck", "f***");
+	fromCGI = fromCGI.replace("Juvi", "the programmer formerly know as Juvi");
+	fromCGI = fromCGI.replace("Aidan", "Alexander Hamilton");
+	$('.comment').remove();
+	$("#chatbox").append(" <div class = " + commentClass + " > <b>" + fromCGI + "</b> </div>");
+previouslySentComments.push(fromCGI);
+	}
 	
-     var XMLHttp;
+	}
+    }
+    XMLHttp.send(null);
+	getProcListBusy = false;
+ }
+  
+}
+
+var intVar;
+function AutoRefresh() {
+//console.log("autorefresh");
+    intVar = setInterval(function(){ getProcList()}, 2000);
+}
+
+function StopRefresh() {
+    clearInterval(intVar);
+}
+
+
+
+
      function getUsername()
      {
-     
+
      var name= document.getElementById('userName').value;
      document.getElementById('user').innerHTML = name;
-     
+commentObject.username = name;
       }
-      
-      /*function exitChat()
-      {
-      clearInterval(intVar)
-      }
-      */
 
 
 
-
-// comment object 
+// comment object
 var commentObject = {
 username : "Hamlet",
 text: "",
@@ -44,14 +107,7 @@ returnOutputString: function() {
 }
 
 }
-/*
-$(document).ready(function(){
-    $("#submitName").click(function(){
-       commentObject.username = $("#userName:text").val();
-	   console.log(commentObject.userName);
-    });
-});
-*/
+
 var XMLHttp, avoidReplication = "";
 if(navigator.appName == "Microsoft Internet Explorer") {
     XMLHttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -59,80 +115,62 @@ if(navigator.appName == "Microsoft Internet Explorer") {
     XMLHttp = new XMLHttpRequest();
 }
 
-// return the value of the radio button that is checked
-// return an empty string if none are checked, or
-// there are no radio buttons
-function getCheckedValue(radioObj) {
-  if(!radioObj)
-     return "";
-  var radioLength = radioObj.length;
-  if(radioLength == undefined)
-     if(radioObj.checked)
-        return radioObj.value;
-     else
-        return "";
-  for(var i = 0; i < radioLength; i++) {
-     if(radioObj[i].checked) {
-        return radioObj[i].value;
-     }
-   }
-    return "";
-}
-function getresponse () {
 
-   //  var ts = getCheckedValue(document.radioResultsSelect.type_select);
+function sendComment () {
 
-     var message = document.getElementById('usermsg').value;
-
-var colorChosen = $("input[name='color']:checked").val();
-
-if (colorChosen === "0")
+if (busy == true)
 {
-  console.log("black");
 }
-if (colorChosen === "1")
+else
 {
-  console.log("blue");
-}
-if (colorChosen === "2")
-{
-  console.log("purple");
-}
+ var message = document.getElementById('usermsg').value;
+busy = true;
 
 if (message.length > 1)
 {
-console.log("message is: " + message);
+console.log("inMessage is: " + message);
   // if (name.length < 1) return;
-  
+
   commentObject.text = message;
-  message = commentObject.returnOutputString();
+  message = commentObject.username + ": " + message + "$END";
+  //inMessage = commentObject.returnOutputString();
 
     XMLHttp.open("GET", "/cgi-bin/olivierid_JAD_chatAjax.cgi?"
 						 + "message=" + message
 						 ,true);
-						 console.log("working 1");
+						
+						 /*
     XMLHttp.onreadystatechange=function() {
-	console.log("working 2");
-    var fromCGI = XMLHttp.responseText;
+		       if (XMLHttp.readyState == 4) {
+
+		       var fromCGI = XMLHttp.responseText;
+
 	var avoidReplication = "";
    // document.getElementById('response_area').innerHTML = fromCGI;
 
-	console.log (avoidReplication);
-	if ( avoidReplication != fromCGI){
-	$("#chatbox").append(" <div> <b>" + fromCGI + "</b>. </div>");
-	avoidReplication = fromCGI;
+	console.log ("Ready to display:"+fromCGI);
+	$("#chatbox").append(" <div> <b>" + fromCGI + "</b> </div>");
 
-	}
-
-	console.log("this is table: " + fromCGI);
-	}
+		       }
+		       }
+			   */
 	XMLHttp.send(null);
+busy = false;
 }
+  
 
+    
+		       }
 
-}
+		       }
+			   
+$( document ).ready(function() {
+    AutoRefresh();
+});
 
 </script>
+</head>
+
 
 <style>
 
@@ -167,7 +205,42 @@ div
 {
   background-color: #f44336;
   width: 100%;
+  height 100 vh;
 }
+
+.myButton {
+	background-color:#f44336;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #ff8fff;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:18px;
+	padding:16px 30px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #66283c;
+}
+.myButton:hover {
+	background-color:#3284d6;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+input[type=text], select, #submitName {
+
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 
 </style>
 
@@ -178,33 +251,36 @@ div
   <div id = "topPart" class = "jumbotron">
 
 <center>
-    <p>Application created by Juvi, Aidan, and Daniel </p>
+  <br>
+  <br>
+    <p>Application created by <strong>Juvi </strong>, <strong>Aidan</strong>, and <strong>Daniel</strong> </p>
 
 
     <h1>SoftDilemma Chatroom</h1>
 
-
-
 <!-- text boc to input username -->
 <div id= "UserName" ></div>
-<form name="userName" action=""> 
+<form name="userName" action="">
    <input name= "userName" type="text" id="userName" size="10" />
-   <input name= "submitName" type="button" onclick= "javascript: getUsername()" 
-   id= "submitName" value= Send /> 
+   <input name= "submitName" type="button" onclick= "javascript: getUsername()"
+   id= "submitName" value= Send />
 
+   <!-- drop down box to choose a color -->
+<!--
 <h2>Color </h2>
-
-<!-- drop down box to choose a color -->
-
 
 <form action="">
   <input type="radio" name="color" value="0"> Black<br>
   <input type="radio" name="color" value="1"> Blue<br>
   <input type="radio" name="color" value="2"> Purple
 </form>
+-->
 
 </center>
-
+<br>
+<br>
+<br>
+<br>
 </div>
 
 <h2> <center>Chat Window </center> </h2>
@@ -221,17 +297,25 @@ div
 
 <form name="message" action=""> <center>
    <input name= "usermsg" type="text" id="usermsg" size="63" />
-  <!-- <input name= "submitmsg" onclick="javascript: getresponse ()" type="submit" id= "submitmsg" value= Send /> -->
+  <!-- <input name= "submitmsg" onclick="javascript: sendComment ()" type="submit" id= "submitmsg" value= Send /> -->
    </center>
    </form>
-
+<center>
    <p>
-<input type="button" onclick="javascript: getresponse ()" name="submit" value="Submit" />
+<input class = "myButton" type="button" onclick="javascript: sendComment ()" name="submit" value="Submit" />
 </p>
+</center>
 <br>
    </div>
-
-
+<center>
+   <p>
+  <input class = "myButton" type="button" onclick="javascript: getProcList ()" name="Results" value="Show Processes" />
+  <input class = "myButton" type="button" onclick="javascript: AutoRefresh ()" name="AutoRefresh" value="Auto Update" />
+  <input class = "myButton" type="button" onclick="javascript: StopRefresh ()" name="Stop" value="Stop Update" />
+</p>
+</center>
+<br>
+<br>
 
 <script type= "text/javascript">
 $(document).ready(function()
