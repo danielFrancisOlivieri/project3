@@ -12,8 +12,8 @@
 <link rel="stylesheet" type="text/css" href="name_stats_ajax.css">
 <script>
 
-     var XMLHttp;
-
+     var XMLHttp, busy = false, vectorCount;
+var previouslySentComments = [];
 
 	 function init() {
     if(navigator.appName == "Microsoft Internet Explorer") {
@@ -36,13 +36,23 @@ function getProcList () {
 	    //document.getElementById('response_area').innerHTML = XMLHttp.responseText;
 
 		       var fromCGI = XMLHttp.responseText;
-
-	var avoidReplication = "";
+	var isNew = true;
+	//var avoidReplication = "";
    // document.getElementById('response_area').innerHTML = fromCGI;
-
+for (i = 0; i < previouslySentComments.length; i++)
+{
+if (fromCGI == previouslySentComments[i])
+{
+isNew = false;
+break;
+}
+}
 	console.log ("Ready to display:"+fromCGI);
-	$("#chatbox").append(" <div> <b>" + fromCGI + "</b> </div>");
-
+	if (isNew){
+	$("#chatbox").append(" <div> <b>" + commentObject.userName + ": " + fromCGI + "</b> </div>");
+previouslySentComments.push(fromCGI);
+	}
+	
 	}
     }
     XMLHttp.send(null);
@@ -66,7 +76,7 @@ function StopRefresh() {
 
      var name= document.getElementById('userName').value;
      document.getElementById('user').innerHTML = name;
-
+commentObject.userName = name;
       }
 
 
@@ -92,10 +102,13 @@ if(navigator.appName == "Microsoft Internet Explorer") {
 
 function sendComment () {
 
-   //  var ts = getCheckedValue(document.radioResultsSelect.type_select);
-
-     var message = document.getElementById('usermsg').value;
-
+if (busy == true)
+{
+}
+else
+{
+ var message = document.getElementById('usermsg').value;
+busy = true;
 
 if (message.length > 1)
 {
@@ -126,7 +139,11 @@ console.log("inMessage is: " + message);
 		       }
 			   */
 	XMLHttp.send(null);
+busy = false;
+}
+  
 
+    
 		       }
 
 		       }
