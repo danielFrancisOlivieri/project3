@@ -1,5 +1,9 @@
-#MakeFile to build and deploy the Sample US CENSUS Name Data using ajax
-# For CSC3004 Software Development
+#File Name: Makefile
+#Team Members: Daniel Oliveri, Juviand Rivera, & Aidan Murphy
+#Email Addresses: olivierid@kenyon.edu, riveraj@kenyon.edu murphy1@kenyon.edu
+#Project Number: 3
+#Description: The makefile for a multi-user chat program.
+#Last Changed: Febuary 27th, 2017
 
 # Put your user name below:
 USER= olivierid
