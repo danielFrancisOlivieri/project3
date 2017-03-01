@@ -1,17 +1,12 @@
 /***************************************************************************
-* nameservercpp  -  Program to serve of last name statistics
- *
 * copyright : (C) 2009 by Jim Skon
-*
-* This program runs as a background server to a CGI program, providinging US Census
-* Data on the frequency of names in response to requestes.  The rational for this 
-* is to demonstrait how a background process can serve up information to a web program,
-* saving the web program from the work of intiallizing large data structures for every
-* call.
-* 
-* 
-*
 ***************************************************************************/
+//File Name: chatServer.cpp
+//Team Members: Daniel Oliveri, Juviand Rivera, & Aidan Murphy
+//Email Addresses: olivierid@kenyon.edu, riveraj@kenyon.edu murphy1@kenyon.edu
+//Project Number: 3
+//Description: The server for a multi-user chat program.
+//Last Changed: March 1st, 2017
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -29,7 +24,7 @@
 
 using namespace std;
 
-
+//A class for parsing all the diffeent info sent in a string from the web page to the server.
 class dataFromWebPage
 {
 	public: 
@@ -48,8 +43,8 @@ class dataFromWebPage
 	friend void find_and_replace(string& source, string const& find, string const& replace);
 	
 };
-// precon: 
-//postcon: 
+// precon: A long string, and a string to find within it and a string to replace that one are inputted
+//postcon: All instances of the 2nd string in the long string are replaced with the 3rd string.
 void find_and_replace(string& source, string const& find, string const& replace)
 {
     for(string::size_type i = 0; (i = source.find(find, i)) != string::npos;)
@@ -267,7 +262,7 @@ int main() {
 string inMessage, outMessage, preventDuplicates;
 
 vector <string> commentVector;
-vector <string> testVector;
+vector <string> testVector;//A test vector, designed to insure the functionality of sending vectors of strings.
 
 testVector.push_back("Gastby");
 testVector.push_back("believed in the green");
