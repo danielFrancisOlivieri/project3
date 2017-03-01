@@ -1,3 +1,9 @@
+//File Name: testclient.cpp
+//Team Members: Daniel Oliveri, Juviand Rivera, & Aidan Murphy
+//Email Addresses: olivierid@kenyon.edu, riveraj@kenyon.edu murphy1@kenyon.edu
+//Project Number: 3
+//Description: A test client for the server of a multi-user chatroom program
+//Last Changed: Febuary 24, 2017
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
