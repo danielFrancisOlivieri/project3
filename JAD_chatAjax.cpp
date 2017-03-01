@@ -1,3 +1,9 @@
+//File Name: JAD_chatAjax.cpp
+//Team Members: Daniel Oliveri, Juviand Rivera, & Aidan Murphy
+//Email Addresses: olivierid@kenyon.edu, riveraj@kenyon.edu murphy1@kenyon.edu
+//Project Number: 3
+//Description: An ajax program that functions as the CGI for communication between a web page and a server for a chat room program.
+//Last Changed: Febuary 27th, 2017
 #include <iostream>
 // Stuff for AJAX
 #include "cgicc/Cgicc.h"
@@ -19,7 +25,7 @@ using namespace std;
 using namespace cgicc; // Needed for AJAX functions.
 
 //Indeed, myString needs to be a copy of the original string
-std::string StringToUpper(std::string myString)
+std::string StringToUpper(std::string myString)//A program to turn a string into uppercase.
 {
   const int length = myString.length();
   for(int i=0; i!=length ; ++i)
