@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <ostream>
 #include "fifo.h"
 
 using namespace std;
@@ -93,7 +94,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$USERNAME*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 1" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -125,7 +126,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$COLOR*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 2" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -171,7 +172,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$PICTURE*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 3" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -217,7 +218,7 @@ void find_and_replace(string& source, string const& find, string const& replace)
 	 tagPosition = originalInput.find("$TEXT*");
 	 if (tagPosition == -1)
 	 {
-		 cout << "error" << endl;
+		 cout << "error 4" << endl;
 		 return "error";
 	 }
 	 startPosition = originalInput.find("*", tagPosition);
@@ -259,147 +260,103 @@ void find_and_replace(string& source, string const& find, string const& replace)
   /* Fifo names */
 string receive_fifo = "Namerequest";
 string send_fifo = "Namereply";
-
+int count = 0;
 /* Server main line,create name MAP, wait for and serve requests */
 int main() {
 
-string inMessage, outMessage;
+string inMessage, outMessage, preventDuplicates;
 
 vector <string> commentVector;
+vector <string> testVector;
 
+testVector.push_back("Gastby");
+testVector.push_back("believed in the green");
+testVector.push_back("light the future that year by ");
+testVector.push_back("year receds before us");
+testVector.push_back("it eludes us then but it is no matter");
+testVector.push_back("tomorrow we'll run faster, stretch out our arms farther.");
 
   // create the FIFOs for communication
   Fifo recfifo(receive_fifo);
   Fifo sendfifo(send_fifo);
   
-  
-  string allCommentsInOneString = "| ";
+  int previousVectorSize = 0;
   
   // main while loop 
    while (1) {
-
+inMessage = "";
+cout << "start" << endl;
+//cout << "1 working: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
 	    recfifo.openread();// opens to read
 	     inMessage = recfifo.recv(); // takes message in 
+		 	sendfifo.openwrite(); // writes 
+		cout << "2 message should follow: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
+			
+		int fourFromEnd = inMessage.size() - 4;
+			
+			// tests if it is a new value 
+			string lastFour = inMessage.substr(fourFromEnd, 4);
+			cout << "3 working: " << inMessage << "vector size: " << commentVector.size() << "last four: " << lastFour << endl << endl;
+			if (lastFour == "$END")
+			{
 		 
-	transform(inMessage.begin(), inMessage.end(), inMessage.begin(),(int (*)(int))tolower); // makes the word lower case
+		if ((inMessage.find("***$request") == -1) && (inMessage.find("$END") != -1))
+		{
+			
+				
+				//cout << "4 working: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
+			
+			
+
+		 string stringToProcess;
+		 stringToProcess = inMessage.substr(0, fourFromEnd);
+		 
+cout << "5 working: " << inMessage << " vector size: " << commentVector.size() << endl << endl;
+			 
+		 
+		 
+	 // inMessage.erase(commentVector.size() - 4, 4);
+		commentVector.push_back(stringToProcess);
+		
+	//cout << "the back of the vector: " << commentVector.back() << endl << endl;
+	//cout << "6 working: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
 	
-	//StemEnglish(inMessage);// stems it 
-		cout << "inmessage: " << inMessage << endl;
-	dataFromWebPage ourMessage(inMessage);
 	
-	//vec = indexSearch(inMessage); // gets the cector of lines 
-	
-	outMessage = ourMessage.returnText();
-	commentVector.push_back(inMessage);
-	//cout << "Vector: " << commentVector.begin() << endl;
-	allCommentsInOneString += inMessage;
-	
-	sendfifo.openwrite(); // writes 
-	cout << "allcomments: " << ourMessage.returnText() << endl; //allCommentsInOneString << endl;
-	sendfifo.send(ourMessage.returnText() + "$END");  //(allCommentsInOneString + "meep");
-	
-	/*
-	if (commentVector.size() > 1)
+	//cout << "allcomments: " << inMessage << endl; //allCommentsInOneString << endl;
+	inMessage = "";
+//cout << "7 working: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
+	// preventDuplicates = inMessage;
+		}
+	    
+	 
+	 if ( inMessage.find("***$request") != string :: npos) 
+	 {
+		 cout << "inside the request stanza" << endl;
+		// cout << "comment vector: " << commentVector.size();
+		 cout << "previous vector: " << previousVectorSize;
+		 if (commentVector.size() > previousVectorSize)
+		 {
+				for (int i = 0; i < commentVector.size(); i++)
 	{
-		for (int i = 0; i < commentVector.size(); i++)
-	{
-		cout << "this is the vec||||--> " << commentVector[i] << endl;
-		sendfifo.send(commentVector[i-1] + "meep");
-		cout << "vector size: " << commentVector.size() << endl;
+		cout << "8 working: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
+		 outMessage = commentVector[i];
+		 sendfifo.send(outMessage);
+		 cout << "i: " << i << endl;
+		 cout <<"has been sent? " << commentVector[i] << " " << i<< endl;
 	}
+	 
+	 sendfifo.send("$END");
+	cout << "END HAS BEEN SENT"  << endl << endl;
+	 } 
 	}
-	else{
-		sendfifo.send(commentVector.front() + "meep");
-	}
-	
-	*/
-	
-	
-	//sendfifo.send("</p>");
 
-	//sendfifo.send(outMessage + "meep");
 
-	
-	
-	//is.close();
-
-	//sendfifo.send("$END");
-
+	 }
+	  cout << "end" << endl;
 
 	sendfifo.fifoclose();
 	 recfifo.fifoclose();
   }
   
   
-  /*
-while (1) {
-  recfifo.openread();
-    inMessage = recfifo.recv();
-	
-	dataFromWebPage dataToSend(inMessage);
-	
-		cout << " Results: " << dataToSend.returnOutMessage() << endl;
-
-	sendfifo.openwrite();
-	sendfifo.send(dataToSend.returnOutMessage() + "goofy");
-	sendfifo.fifoclose();
-	recfifo.fifoclose();
 }
-
-/*
-string inMessage, reply; // variable to hold the reply gotten from the webpage 
-
-  // create the FIFOs for communication
-  Fifo recfifo(receive_fifo);
-  Fifo sendfifo(send_fifo);
-
-  recfifo.openread();
-  
-while (reply.find("$END") != -1)
-{
-  
-  
-//  dataFromWebPage ourData(inputtedString); // put string into class 
-  
-  //cout << ourData.returnOutMessage() << endl;
-  cout << "Looping" << endl;
-  
-	reply = recfifo.recv();
-	
-	cout << reply << endl;
-	
-	
-}
-
-recfifo.fifoclose();
-  sendfifo.openwrite();
-	sendfifo.send(reply);
-	sendfifo.fifoclose();
-	*/
-	//recfifo.fifoclose();
-	
-  
-  // send the string out to CGI 
-  
-  //cout<< dataFromWebPage.originalInput << endl;
-  /*
-  To do
-  
-  1. open fifos
-  2. read data from cgi
-  3. open the object (possibly JSON)
-  4. censor
-  5. change object to censored form
-  6. send to CGI through fifo 
-  7. repeat  
-  
-  */
-  
-
-  
-}
-
-
- 
- 
- 
