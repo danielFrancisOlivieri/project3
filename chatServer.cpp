@@ -281,7 +281,8 @@ testVector.push_back("tomorrow we'll run faster, stretch out our arms farther.")
   Fifo sendfifo(send_fifo);
   
   int previousVectorSize = 0;
-  
+  int fourFromEnd;
+  string lastFour;
   // main while loop 
    while (1) {
 inMessage = "";
@@ -291,11 +292,17 @@ cout << "start" << endl;
 	     inMessage = recfifo.recv(); // takes message in 
 		 	sendfifo.openwrite(); // writes 
 		cout << "2 message should follow: " << inMessage << "vector size: " << commentVector.size() << endl << endl;
+			if (inMessage.size() > 4)
+			{
+				fourFromEnd = inMessage.size() - 4;
+				// tests if it is a new value 
+			lastFour = inMessage.substr(fourFromEnd, 4);
+			}
+			else{
+				lastFour = inMessage;
+			}
+					
 			
-		int fourFromEnd = inMessage.size() - 4;
-			
-			// tests if it is a new value 
-			string lastFour = inMessage.substr(fourFromEnd, 4);
 			cout << "3 working: " << inMessage << "vector size: " << commentVector.size() << "last four: " << lastFour << endl << endl;
 			if (lastFour == "$END")
 			{
