@@ -20,88 +20,76 @@
 #include "fifo.h"
 
 using namespace std;
-  
-  /* Fifo names */
+
+/* Fifo names */
 string receive_fifo = "Chatrequest";
 string send_fifo = "Chatreply";
 int count = 0;
 /* Server main line,create name MAP, wait for and serve requests */
-int main() {
+int main()
+{
 
-string inMessage, outMessage, preventDuplicates;
+    string inMessage, outMessage, preventDuplicates;
 
-vector <string> commentVector; // holds comments to be outputted
+    vector<string> commentVector; // holds comments to be outputted
 
+    // create the FIFOs for communication
+    Fifo recfifo(receive_fifo);
+    Fifo sendfifo(send_fifo);
 
-  // create the FIFOs for communication
-  Fifo recfifo(receive_fifo);
-  Fifo sendfifo(send_fifo);
-  
-  int previousVectorSize = 0; // helps to ensure that the vector is only sent if there are new comments to be added
-  int fourFromEnd; // helps remove the $END part 
-  string lastFour;
-  // main while loop 
-   while (1) {
-inMessage = "";
+    int previousVectorSize = 0; // helps to ensure that the vector is only sent if there are new comments to be added
+    int fourFromEnd; // helps remove the $END part
+    string lastFour;
+    // main while loop
+    while (1) {
+        inMessage = "";
 
-	    recfifo.openread();// opens to read
-	     inMessage = recfifo.recv(); // takes message in 
-		 	sendfifo.openwrite(); // writes 
-		
-		
-			if (inMessage.size() > 4) // this is to prevent a string that is too short from being cut 
-			{
-				
-				fourFromEnd = inMessage.size() - 4; // gets beginning of cut
-				// tests if it is a new value 
-			lastFour = inMessage.substr(fourFromEnd, 4); // cuts 
-			}
-			else{
-				lastFour = inMessage;
-			}
-					
-			
-			if (lastFour == "$END")
-			{
-		 
-		if ((inMessage.find("***$request") == -1) && (inMessage.find("$END") != -1)) // makes certain the message isn't the request 
-		{
-			
-		 string stringToProcess; 
-		 stringToProcess = inMessage.substr(0, fourFromEnd); // leaves behind only the user's string 
-		 
-		commentVector.push_back(stringToProcess);
-		
+        recfifo.openread(); // opens to read
+        inMessage = recfifo.recv(); // takes message in
+        sendfifo.openwrite(); // writes
 
-	inMessage = "";
-		}
-	    
-	 
-	 if ( inMessage.find("***$request") != string :: npos) // checks if it's a request 
-	 {
+        if (inMessage.size() > 4) // this is to prevent a string that is too short from being cut
+        {
 
-		 if (commentVector.size() > previousVectorSize) // helps to ensure that the vector is only sent if there are new comments to be added
-		 {
-				for (int i = 0; i < commentVector.size(); i++)
-	{
+            fourFromEnd = inMessage.size() - 4; // gets beginning of cut
+            // tests if it is a new value
+            lastFour = inMessage.substr(fourFromEnd, 4); // cuts
+        }
+        else {
+            lastFour = inMessage;
+        }
 
-		 outMessage = commentVector[i];
-		 sendfifo.send(outMessage);
-	
-	}
-	 
-	 sendfifo.send("$END");
+        if (lastFour == "$END") {
 
-	 } 
-	}
+            if ((inMessage.find("***$request") == -1) && (inMessage.find("$END") != -1)) // makes certain the message isn't the request
+            {
 
+                string stringToProcess;
+                stringToProcess = inMessage.substr(0, fourFromEnd); // leaves behind only the user's string
 
-	 }
+                commentVector.push_back(stringToProcess);
 
-// closing fifos 
-	sendfifo.fifoclose();
-	 recfifo.fifoclose();
-  }
-  
-  
+                inMessage = "";
+            }
+
+            if (inMessage.find("***$request") != string::npos) // checks if it's a request
+            {
+
+                if (commentVector.size() > previousVectorSize) // helps to ensure that the vector is only sent if there are new comments to be added
+                {
+                    for (int i = 0; i < commentVector.size(); i++) {
+
+                        outMessage = commentVector[i];
+                        sendfifo.send(outMessage);
+                    }
+
+                    sendfifo.send("$END");
+                }
+            }
+        }
+
+        // closing fifos
+        sendfifo.fifoclose();
+        recfifo.fifoclose();
+    }
 }
