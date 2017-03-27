@@ -22,8 +22,8 @@
 using namespace std;
   
   /* Fifo names */
-string receive_fifo = "Namerequest";
-string send_fifo = "Namereply";
+string receive_fifo = "Chatrequest";
+string send_fifo = "Chatreply";
 int count = 0;
 /* Server main line,create name MAP, wait for and serve requests */
 int main() {
