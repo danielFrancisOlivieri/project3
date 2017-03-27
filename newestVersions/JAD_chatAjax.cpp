@@ -31,8 +31,8 @@ std::string StringToUpper(std::string myString)
 
 
 // fifo for communication
-string receive_fifo = "Namereply";
-string send_fifo = "Namerequest";
+string receive_fifo = "Chatreply";
+string send_fifo = "Chatrequest";
 ofstream JADChatlog;
 
 int main() {
