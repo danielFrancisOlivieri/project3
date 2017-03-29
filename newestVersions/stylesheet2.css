@@ -9,11 +9,12 @@ div {
 #chatbox {
     padding: 10px;
     background: #fff;
-    height: 260px;
-    width: 430px;
+    height: 500px;
+    width: 500px;
     border: 1px solid #ACD8F0;
     overflow: auto;
     margin: 0 auto;
+    font: Arial;
 }
 #topPart {
     background-color: #f44336;
@@ -51,4 +52,28 @@ select,
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    font-family: Arial;
+    border: 2px dotted #ACD8F0;
+}
+
+h1
+{
+font-size: 50px;
+color: #ACD8F0;
+text-shadow: 2px 2px black;
+}
+
+h2
+{
+font-size: 30px;
+}
+
+h3
+{
+font-size: 30px;
+}
+
+h4
+{
+font-size: 13px;
 }
