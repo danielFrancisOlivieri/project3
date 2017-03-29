@@ -1,4 +1,4 @@
-				// variables to show when processes are busy 
+// variables to show when processes are busy 
 				var XMLHttp, busy = false,
 				    getProcListBusy = false;
 				var previouslySentComments = ["$END"]; // prevents duplication
@@ -80,9 +80,16 @@
 				    var name = document.getElementById('userName').value;
 				    document.getElementById('user').innerHTML = name;
 				    commentObject.username = name;
+				    document.getElementById('userName').disabled = true;
 				}
-
-
+				
+		
+				function logOut()
+				{
+				 
+				 document.getElementById('userName').disabled = false;
+				 
+				}
 
 				// comment object
 				var commentObject = {
