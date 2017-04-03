@@ -253,8 +253,8 @@ void find_and_replace(string& source, string const& find, string const& replace)
   
 
   /* Fifo names */
-string receive_fifo = "Namerequest";
-string send_fifo = "Namereply";
+string receive_fifo = "Chatrequest";
+string send_fifo = "Chatreply";
 int count = 0;
 /* Server main line,create name MAP, wait for and serve requests */
 int main() {
@@ -348,7 +348,7 @@ cout << "5 working: " << inMessage << " vector size: " << commentVector.size() <
 	}
 	 
 	 sendfifo.send("$END");
-	cout << "END HAS BEEN SENT"  << endl << endl;
+	cout << "END HAS BEEN SENT"  << endl << endl;//Message confirming the end has been sent.
 	 } 
 	}
 
