@@ -3,7 +3,7 @@
     border: dashed;
 }
 div {
-    width: 400px;
+    width: 530px;
     margin: auto;
 }
 #chatbox {
@@ -77,3 +77,25 @@ h4
 {
 font-size: 13px;
 }
+
+#menu 
+{
+
+margin: 0 auto;
+height: 50px;
+width: 100%;
+background-color: #ACD8F0;
+
+}
+button
+{
+float: right;
+margin: .5cm;
+
+}
+.welcome { float:left;
+margin:.5cm;
+
+ }
+.msgln { margin:0 0 2px 0; }
+  
