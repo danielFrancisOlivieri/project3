@@ -81,6 +81,9 @@
 				    document.getElementById('user').innerHTML = name;
 				    commentObject.username = name;
 				    document.getElementById('userName').disabled = true;
+				    
+				    var div = document.getElementById('chatbox');
+				    div.style.visibility= 'visible';
 				}
 				
 		
@@ -88,6 +91,16 @@
 				{
 				 
 				 document.getElementById('userName').disabled = false;
+				 
+				 alert("Do you want to Log Out? This will delete the chats.");
+				 
+				 /*if(confirm("Do you want to Log Out? This will delete the chats."))
+   				 document.forms[0].submit();
+ 				 else
+ 				   return false; */
+ 				   
+				 var div = document.getElementById('chatbox');
+				 div.style.visibility= 'hidden';
 				 
 				}
 
