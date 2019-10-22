@@ -50,6 +50,7 @@ PutCGI: JAD_chatAjax
 PutHTML:
 	cp chatFrontEnd.html /var/www/html/class/softdev/$(USER)/project3
 	cp name_stats_ajax.css /var/www/html/class/softdev/$(USER)/project3
+	cp active.js /var/www/html/class/softdev/$(USER)/project3
 
 	echo "Current contents of your HTML directory: "
 	ls -l /var/www/html/class/softdev/$(USER)/project3
